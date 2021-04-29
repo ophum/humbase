@@ -11,6 +11,8 @@ import (
 	"github.com/ophum/humbase/pkg/method"
 	"github.com/ophum/humbase/pkg/store"
 	"gopkg.in/yaml.v2"
+
+	"github.com/gin-contrib/cors"
 )
 
 type Config struct {
@@ -45,6 +47,10 @@ func init() {
 func main() {
 	r := gin.Default()
 
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{"*"}
+	corsConfig.AllowHeaders = append(corsConfig.AllowHeaders, "*")
+	r.Use(cors.New(corsConfig))
 	v0 := r.Group("api/v0")
 	{
 		a := auth.NewAuth(&config.AuthConfig)
