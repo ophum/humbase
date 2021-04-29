@@ -1,0 +1,6 @@
+listenAddress: localhost
+listenPort: 8888
+auth:
+  secret: test-secret
+store:
+  apiKey: test-store-api-key
