@@ -134,7 +134,10 @@ func (m *Method) run(ctx *gin.Context) {
 
 		res, err := m.runPython3(program.Code, string(body))
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, err)
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"output": res,
+				"error":  err,
+			})
 			return
 		}
 

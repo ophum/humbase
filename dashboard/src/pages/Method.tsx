@@ -76,8 +76,15 @@ export default function MethodPage() {
                     }}>
                         <h3>{humbaseURL}/method/{name}</h3>
                         <button type="button" onClick={() => onDel(name)}>削除</button>
+                        <button type="button" onClick={() => {
+                            setNewMethodName(name)
+                            setNewProgram({
+                                lang: 'python3',
+                                code: methods[name].code,
+                            })
+                        }}>編集</button>
                         <p>LANG: {methods[name].lang}</p>
-                        <div style={{border: '1px solid grey' , borderRadius: 4, padding: 4}}>
+                        <div style={{overflow: "scroll",border: '1px solid grey' , borderRadius: 4, padding: 4}}>
                             <pre><code>{methods[name].code}</code></pre>
                         </div>
 
@@ -104,6 +111,7 @@ const RunMethod = ({name, humbaseURL, adminKey, apiKey}: RunMethodProps) => {
 
         client.run(name, body).then((res) => {
             alert(JSON.stringify(res));
+            console.log(res);
         });
     }
     return (
