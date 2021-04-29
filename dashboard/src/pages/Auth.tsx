@@ -33,8 +33,7 @@ export default function AuthPage() {
     }
     return (
         <div style={{width: 800, margin: '0 auto 0 auto'}}>
-            <Link to="/method">Method</Link>
-            <h1>Auth</h1>
+            <h1>humbase Auth</h1>
             humbase url: <input type="text" value={humbaseURL} onChange={(e) => setHumbaseURL(e.target.value)} /><br />
             adminKey: <input type="text" value={adminKey} onChange={(e) => setAdminKey(e.target.value)} /><br />
             apiKey: <input type="text" value={apiKey} onChange={(e) => setAPIKey(e.target.value)} /><br /><br />
