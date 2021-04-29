@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import MethodClient, { Methods, Program } from '../lib/client/method';
 
 export default function MethodPage() {
@@ -8,7 +9,6 @@ export default function MethodPage() {
     const [methods, setMethods] = useState({} as {[name: string]: Program});
     const [newMethodName, setNewMethodName] = useState(""); 
     const [newProgram, setNewProgram] = useState({} as Program);
-    const [bodies, setBodies] = useState({} as {[name: string]: string});
 
     const getMethods = async () => {
         const client = new MethodClient(humbaseURL, adminKey, apiKey);
@@ -52,6 +52,7 @@ export default function MethodPage() {
 
     return (
         <div style={{width: 800, margin: '0 auto 0 auto'}}>
+            <Link to="/auth">Auth</Link>
             <h1>Method</h1>
             humbase url: <input type="text" value={humbaseURL} onChange={(e) => setHumbaseURL(e.target.value)} /><br />
             adminKey: <input type="text" value={adminKey} onChange={(e) => setAdminKey(e.target.value)} /><br />

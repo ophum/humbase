@@ -22,14 +22,55 @@ func NewAuth(config *Config) *Auth {
 	}
 }
 
+func (a *Auth) checkAPIKey() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("humbase-auth-api-key")
+		if token == a.config.APIKey {
+			ctx.Next()
+		} else {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "bad humbase-auth-api-key",
+			})
+			ctx.Abort()
+		}
+	}
+}
+
+func (a *Auth) checkAdminKey() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("humbase-auth-admin-key")
+		if token == a.config.AdminKey {
+			ctx.Next()
+		} else {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "bad humbase-auth-admin-key",
+			})
+			ctx.Abort()
+		}
+	}
+}
+
 func (a *Auth) RegisterRoutes(router *gin.RouterGroup) {
 	auth := router.Group("/auth")
+	auth.Use(a.checkAPIKey())
 	{
 		auth.POST("sign-up", a.signUp)
 		auth.POST("sign-in", a.signIn)
 		auth.DELETE("sign-out", a.signOut)
 		auth.POST("verify", a.verifyJWT)
 	}
+
+	admin := router.Group("/auth")
+	admin.Use(a.checkAdminKey())
+	{
+		admin.GET("", a.findAll)
+	}
+}
+
+func (a *Auth) findAll(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{
+		"users": a.users,
+	})
 }
 
 func (a *Auth) signUp(ctx *gin.Context) {
