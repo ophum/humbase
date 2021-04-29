@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ophum/humbase/pkg/auth"
+	"github.com/ophum/humbase/pkg/method"
 	"github.com/ophum/humbase/pkg/store"
 	"gopkg.in/yaml.v2"
 )
@@ -47,9 +48,11 @@ func main() {
 	{
 		a := auth.NewAuth(&config.AuthConfig)
 		s := store.NewStore(&config.StoreConfig)
+		m := method.NewMethod()
 
 		a.RegisterRoutes(v0)
 		s.RegisterRoutes(v0)
+		m.RegisterRoutes(v0)
 	}
 
 	r.Run(fmt.Sprintf("%s:%d", config.ListenAddress, config.ListenPort))
