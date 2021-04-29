@@ -22,22 +22,57 @@ type Program struct {
 }
 
 type Method struct {
+	config  *Config
 	methods map[string]Program
 }
 
-func NewMethod() *Method {
+func NewMethod(config *Config) *Method {
 	return &Method{
+		config:  config,
 		methods: map[string]Program{},
 	}
 }
 
-func (m *Method) RegisterRoutes(router *gin.RouterGroup) {
-	method := router.Group("method")
-	{
-		method.GET("", m.findAll)
-		method.POST("", m.put)
-		method.DELETE(":name", m.del)
+func (m *Method) checkAPIKey() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("humbase-method-api-key")
+		if token == m.config.APIKey {
+			ctx.Next()
+		} else {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "bad humbase-method-api-key",
+			})
+			ctx.Abort()
+		}
+	}
+}
 
+func (m *Method) checkAdminKey() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("humbase-method-admin-key")
+		if token == m.config.AdminKey {
+			ctx.Next()
+		} else {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "bad humbase-method-admin-key",
+			})
+			ctx.Abort()
+		}
+	}
+}
+
+func (m *Method) RegisterRoutes(router *gin.RouterGroup) {
+	admin := router.Group("method")
+	admin.Use(m.checkAdminKey())
+	{
+		admin.GET("", m.findAll)
+		admin.POST("", m.put)
+		admin.DELETE(":name", m.del)
+	}
+
+	method := router.Group("method")
+	method.Use(m.checkAPIKey())
+	{
 		method.POST(":name", m.run)
 	}
 }

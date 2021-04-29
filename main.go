@@ -14,10 +14,11 @@ import (
 )
 
 type Config struct {
-	ListenAddress string       `yaml:"listenAddress"`
-	ListenPort    int          `yaml:"listenPort"`
-	AuthConfig    auth.Config  `yaml:"auth"`
-	StoreConfig   store.Config `yaml:"store"`
+	ListenAddress string        `yaml:"listenAddress"`
+	ListenPort    int           `yaml:"listenPort"`
+	AuthConfig    auth.Config   `yaml:"auth"`
+	StoreConfig   store.Config  `yaml:"store"`
+	MethodConfig  method.Config `yaml:"method"`
 }
 
 var (
@@ -48,7 +49,7 @@ func main() {
 	{
 		a := auth.NewAuth(&config.AuthConfig)
 		s := store.NewStore(&config.StoreConfig)
-		m := method.NewMethod()
+		m := method.NewMethod(&config.MethodConfig)
 
 		a.RegisterRoutes(v0)
 		s.RegisterRoutes(v0)
