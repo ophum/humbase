@@ -2,5 +2,10 @@ listenAddress: localhost
 listenPort: 8888
 auth:
   secret: test-secret
+  apiKey: test-auth-api-key
+  adminKey: test-auth-admin-key
 store:
   apiKey: test-store-api-key
+method:
+  apiKey: test-method-api-key
+  adminKey: test-method-admin-key

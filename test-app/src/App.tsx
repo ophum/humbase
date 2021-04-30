@@ -38,6 +38,10 @@ function App() {
       password: password,
     });
 
+    if (res.token == undefined)  {
+      return;
+    }
+
     setToken(res.token);
     resetForm();
   }
@@ -81,6 +85,13 @@ function App() {
       return;
     }
 
+    const ver = await authClient.verify({
+      token: token,
+    })
+    if (ver.status != "valid") {
+      setToken("");
+    }
+
     const res = await methodClient.run("getTodo", {
       token: token,
     }) as getTodoResponse;
@@ -117,11 +128,14 @@ function App() {
 
           <input type="text" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} />
           <button type="button" onClick={addTodo}>追加</button>
-          {todoList.map((todo, key) => {
+          {todoList && todoList.map((todo, key) => {
+            let color = "red";
+            if (todo.status == "doing") color = "lightblue";
+            else if (todo.status == "done") color = "green";
             return (
-              <li key={key}>{todo.todo} <span onClick={() => changeStatus(key)}>{todo.status}</span></li>
+              <li style={{backgroundColor: color}} key={key}>{todo.todo} <span style={{cursor: "pointer"}} onClick={() => changeStatus(key)}>[{todo.status}]</span></li>
             )
-          })}
+          }).reverse()}
         </div>
       )}
     </div>

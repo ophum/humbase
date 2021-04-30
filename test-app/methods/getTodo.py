@@ -6,7 +6,7 @@ headers = {
   'humbase-auth-api-key': 'test-auth-api-key',
   'humbase-store-api-key': 'test-store-api-key'
 }
-body = json.loads(json.loads(os.environ.get('BODY')))
+body = json.loads(os.environ.get('BODY'))
 payload = json.dumps({
   'token': body['token']
 })

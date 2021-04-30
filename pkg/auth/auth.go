@@ -190,6 +190,13 @@ func (a *Auth) verifyJWT(ctx *gin.Context) {
 		return
 	}
 
+	if req.Token == "" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized",
+		})
+		return
+	}
+
 	token, err := jwt.Parse(string(req.Token), func(token *jwt.Token) (interface{}, error) {
 		return []byte(a.config.Secret), nil
 	})
