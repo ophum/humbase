@@ -194,8 +194,15 @@ func (a *Auth) verifyJWT(ctx *gin.Context) {
 		return []byte(a.config.Secret), nil
 	})
 	if token.Valid {
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "unauthorized",
+			})
+		}
 		ctx.JSON(http.StatusOK, gin.H{
 			"status": "valid",
+			"email":  claims["email"].(string),
 		})
 	} else if ve, ok := err.(*jwt.ValidationError); ok {
 		ctx.JSON(http.StatusBadRequest, ve)
